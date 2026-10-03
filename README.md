@@ -19,6 +19,8 @@ Liquidity providers deposit both tokens and receive pool shares. Traders swap on
 src/TokenSwapPool.sol                         The pool contract
 test/TokenSwapPool.t.sol                      Unit and fuzz tests (+ MockERC20)
 test/invariant/TokenSwapPool.invariant.t.sol  Invariant tests with a handler
+script/Deploy.s.sol                           Deploys test tokens + pool and seeds liquidity
+frontend/                                     React + Vite + viem web app
 foundry.toml                                  Compiler, fuzz, invariant and lint config
 ```
 
@@ -27,9 +29,8 @@ foundry.toml                                  Compiler, fuzz, invariant and lint
 Requires [Foundry](https://book.getfoundry.sh/getting-started/installation).
 
 ```bash
-git clone https://github.com/Tchalz/Token-swap.git
+git clone --recurse-submodules https://github.com/Tchalz/Token-swap.git
 cd Token-swap
-forge install OpenZeppelin/openzeppelin-contracts foundry-rs/forge-std --no-commit
 forge build
 forge test
 ```
@@ -42,6 +43,68 @@ forge coverage                 # coverage table
 forge test --gas-report        # per-function gas costs
 forge lint                     # static lint checks
 ```
+
+## Run the demo (local chain + web app)
+
+You need [Foundry](https://book.getfoundry.sh/getting-started/installation), [Node.js](https://nodejs.org) 18 or newer, and the [MetaMask](https://metamask.io) browser extension.
+
+**1. Start a local chain** (leave this terminal running)
+
+```bash
+anvil
+```
+
+**2. Deploy the contracts** (in a second terminal, from the project root)
+
+```bash
+forge script script/Deploy.s.sol --tc Deploy \
+  --rpc-url http://127.0.0.1:8545 \
+  --broadcast \
+  --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+```
+
+This deploys two test tokens (TKA, TKB) and the pool, then seeds it with 100,000 TKA and 400,000 TKB (1 TKA = 4 TKB). On a fresh Anvil chain the addresses are:
+
+| Contract | Address |
+|---|---|
+| Token A (TKA) | `0x5fbdb2315678afecb367f032d93f642f64180aa3` |
+| Token B (TKB) | `0xe7f1725e7734ce288f8367e1bb143e90bb3f0512` |
+| Pool | `0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0` |
+
+The frontend is already configured with these. If your deploy prints different addresses, update them in `frontend/src/config.js`.
+
+The private key above is Anvil's well-known first test account. It is public and holds only fake ETH on your local chain. Never use it, or send real funds to its address, on any real network.
+
+**3. Start the web app** (in a third terminal)
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open the URL it prints, normally `http://localhost:5173`.
+
+**4. Set up MetaMask**
+
+- Choose **Add wallet**, then **Import an account**, and paste the private key from step 2. The account will hold 10,000 fake ETH.
+- Click **Connect MetaMask** in the app. It offers to add the "Anvil Local" network (chain ID 31337), so approve it.
+
+**5. Try it**
+
+1. Click **Get 1,000 TKA + 1,000 TKB** to mint test tokens.
+2. Enter an amount in **Swap**. A live quote appears, and the swap uses 1% slippage protection.
+3. Add liquidity (the TKB amount auto-fills to match the pool ratio), then remove it with the 25%, 50% or 100% buttons.
+
+### Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| Page shows errors or empty reserves | Anvil isn't running, or it was restarted. Run step 2 again. |
+| "does not have any code" | The chain was reset. Redeploy with step 2. |
+| MetaMask nonce or "transaction underpriced" errors after restarting Anvil | In MetaMask: Settings, Advanced, **Clear activity tab data**. |
+| Red network-fee warning in MetaMask | The connected account has no ETH on Anvil. Use the imported test account. |
+| Repeated "execution reverted" lines in the Anvil log | Normal. MetaMask probes the pool for token details, and the pool correctly refuses. |
 
 ## Contract overview
 

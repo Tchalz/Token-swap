@@ -18,3 +18,8 @@ exclude_lints = [
     "screaming-snake-case-immutable", "missing-events-access-control",
     "divide-before-multiply", "multi-contract-file",
 ]
+
+[invariant]
+runs = 256
+depth = 100
+fail_on_revert = false

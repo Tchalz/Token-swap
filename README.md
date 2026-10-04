@@ -44,6 +44,28 @@ forge test --gas-report        # per-function gas costs
 forge lint                     # static lint checks
 ```
 
+## Live demo (Sepolia testnet)
+
+The contracts are deployed on the Sepolia test network and can be inspected on Etherscan:
+
+| Contract | Address |
+|---|---|
+| Pool (`TokenSwapPool`) | [`0x199cdccb51ddff0dbfdce4d21af4f41d94dafbb2`](https://sepolia.etherscan.io/address/0x199cdccb51ddff0dbfdce4d21af4f41d94dafbb2) |
+| Token A (TKA) | [`0x8536a0b2daffbb9e22e6ac55e1cfd739b8c5c62f`](https://sepolia.etherscan.io/address/0x8536a0b2daffbb9e22e6ac55e1cfd739b8c5c62f) |
+| Token B (TKB) | [`0x9b43c9a0f7aeb471e3859e8dca1c85ee5a53adbd`](https://sepolia.etherscan.io/address/0x9b43c9a0f7aeb471e3859e8dca1c85ee5a53adbd) |
+
+The pool was seeded with 100,000 TKA and 400,000 TKB (1 TKA = 4 TKB) at a 0.3% swap fee. The raw deployment record is in `broadcast/Deploy.s.sol/11155111/run-latest.json`.
+
+To use the web app against Sepolia:
+
+```bash
+cd frontend
+npm install
+VITE_NETWORK=sepolia npm run dev
+```
+
+Open the printed URL, click **Connect MetaMask** (it switches to Sepolia), and use the **Get 1,000 TKA + 1,000 TKB** button to mint test tokens. Every transaction needs a little Sepolia ETH for gas, which you can get from any public Sepolia faucet. TKA and TKB are open-mint test tokens with no value.
+
 ## Run the demo (local chain + web app)
 
 You need [Foundry](https://book.getfoundry.sh/getting-started/installation), [Node.js](https://nodejs.org) 18 or newer, and the [MetaMask](https://metamask.io) browser extension.

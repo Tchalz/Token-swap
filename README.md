@@ -46,6 +46,8 @@ forge lint                     # static lint checks
 
 ## Live demo (Sepolia testnet)
 
+**Live app:** https://token-swap-khaki-beta.vercel.app
+
 The contracts are deployed on the Sepolia test network and can be inspected on Etherscan:
 
 | Contract | Address |

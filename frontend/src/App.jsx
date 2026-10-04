@@ -3,10 +3,9 @@ import {
   createPublicClient, createWalletClient, custom, http,
   formatUnits, parseUnits, maxUint256,
 } from 'viem'
-import { foundry } from 'viem/chains'
-import { POOL, TOKEN_A, TOKEN_B, poolAbi, tokenAbi } from './config'
+import { POOL, TOKEN_A, TOKEN_B, CHAIN, RPC_URL, CHAIN_PARAMS, poolAbi, tokenAbi } from './config'
 
-const pub = createPublicClient({ chain: foundry, transport: http('http://127.0.0.1:8545') })
+const pub = createPublicClient({ chain: CHAIN, transport: http(RPC_URL) })
 const read = (address, abi, functionName, args = []) =>
   pub.readContract({ address, abi, functionName, args })
 const fmt = (v) =>
@@ -41,7 +40,17 @@ export default function App() {
     setD({ rA, rB, balA, balB, shares, total })
   }
 
-  useEffect(() => { refresh().catch((e) => setMsg(e.shortMessage || e.message)) }, [])
+  useEffect(() => {
+    refresh().catch((e) => setMsg(e.shortMessage || e.message))
+    if (!window.ethereum) return
+    const onChange = (accs) => {
+      const a = accs[0] ?? null
+      setAccount(a)
+      refresh(a)
+    }
+    window.ethereum.on('accountsChanged', onChange)
+    return () => window.ethereum.removeListener('accountsChanged', onChange)
+  }, [])
 
   useEffect(() => {
     const n = parse(amtIn)
@@ -55,20 +64,20 @@ export default function App() {
       const [acc] = await window.ethereum.request({ method: 'eth_requestAccounts' })
       try {
         await window.ethereum.request({
-          method: 'wallet_addEthereumChain',
-          params: [{
-            chainId: '0x7a69', chainName: 'Anvil Local',
-            rpcUrls: ['http://127.0.0.1:8545'],
-            nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-          }],
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: CHAIN_PARAMS.chainId }],
         })
-      } catch { /* already added or rejected */ }
+      } catch {
+        try {
+          await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [CHAIN_PARAMS] })
+        } catch { /* rejected */ }
+      }
       setAccount(acc)
       await refresh(acc)
     } catch (e) { setMsg(e.shortMessage || e.message) }
   }
 
-  const wallet = () => createWalletClient({ chain: foundry, transport: custom(window.ethereum) })
+  const wallet = () => createWalletClient({ chain: CHAIN, transport: custom(window.ethereum) })
 
   async function send(address, abi, functionName, args) {
     const hash = await wallet().writeContract({ address, abi, functionName, args, account })
@@ -126,7 +135,7 @@ export default function App() {
   return (
     <main>
       <h1>Token Swap Pool</h1>
-      <div className="muted">Constant-product AMM on a local Anvil chain</div>
+      <div className="muted">Constant-product AMM on {CHAIN_PARAMS.chainName}</div>
 
       {!ready ? (
         <div className="card"><button onClick={connect}>Connect MetaMask</button></div>

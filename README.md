@@ -76,6 +76,12 @@ The pool's events on Etherscan: the seed deposit (with the 1,000 locked shares) 
 
 ![Pool events on Sepolia Etherscan](screenshots/events.png)
 
+### Evidence
+
+The pool's events on Etherscan: the seed deposit (with the 1,000 locked shares) and a live swap of 10 TKA for 39.876 TKB.
+
+![Pool events on Sepolia Etherscan](screenshots/events.png)
+
 ## Run the demo (local chain + web app)
 
 You need [Foundry](https://book.getfoundry.sh/getting-started/installation), [Node.js](https://nodejs.org) 18 or newer, and the [MetaMask](https://metamask.io) browser extension.

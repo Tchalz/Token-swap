@@ -70,6 +70,12 @@ VITE_NETWORK=sepolia npm run dev
 
 Open the printed URL, click **Connect MetaMask** (it switches to Sepolia), and use the **Get 1,000 TKA + 1,000 TKB** button to mint test tokens. Every transaction needs a little Sepolia ETH for gas, which you can get from any public Sepolia faucet. TKA and TKB are open-mint test tokens with no value.
 
+### Evidence
+
+The pool's events on Etherscan: the seed deposit (with the 1,000 locked shares) and a live swap of 10 TKA for 39.876 TKB.
+
+![Pool events on Sepolia Etherscan](screenshots/events.png)
+
 ## Run the demo (local chain + web app)
 
 You need [Foundry](https://book.getfoundry.sh/getting-started/installation), [Node.js](https://nodejs.org) 18 or newer, and the [MetaMask](https://metamask.io) browser extension.

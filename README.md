@@ -76,11 +76,13 @@ The pool's events on Etherscan: the seed deposit (with the 1,000 locked shares) 
 
 ![Pool events on Sepolia Etherscan](screenshots/events.png)
 
-### Evidence
+The swap transaction itself:
 
-The pool's events on Etherscan: the seed deposit (with the 1,000 locked shares) and a live swap of 10 TKA for 39.876 TKB.
+![Swap transaction on Sepolia](screenshots/swap-tx.png)
 
-![Pool events on Sepolia Etherscan](screenshots/events.png)
+The pool's reserves, read directly from the verified contract:
+
+![getReserves on Etherscan](screenshots/reserves.png)
 
 ## Run the demo (local chain + web app)
 

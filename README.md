@@ -58,6 +58,8 @@ The contracts are deployed on the Sepolia test network and can be inspected on E
 
 The pool was seeded with 100,000 TKA and 400,000 TKB (1 TKA = 4 TKB) at a 0.3% swap fee. The raw deployment record is in `broadcast/Deploy.s.sol/11155111/run-latest.json`.
 
+All three contracts are verified on Etherscan, so the source can be read and called from the **Contract** tab: [Pool](https://sepolia.etherscan.io/address/0x199cdccb51ddff0dbfdce4d21af4f41d94dafbb2#code), [TKA](https://sepolia.etherscan.io/address/0x8536a0b2daffbb9e22e6ac55e1cfd739b8c5c62f#code), [TKB](https://sepolia.etherscan.io/address/0x9b43c9a0f7aeb471e3859e8dca1c85ee5a53adbd#code).
+
 To use the web app against Sepolia:
 
 ```bash
